@@ -3,7 +3,7 @@ import Foundation
 /// Snapshot of the gateway-related preferences, passed into the resolver so the
 /// resolver stays free of UI/UserDefaults dependencies (and easily testable).
 struct GatewayConfig: Equatable {
-    /// Either a base host (`https://dweb.link`) or a template containing
+    /// Either a base host (`https://inbrowser.link`) or a template containing
     /// `{cid}` and optionally `{path}` placeholders.
     var preferredGateway: String
     /// When true, recognized http(s) gateway URLs are rewritten through the
@@ -15,7 +15,12 @@ struct GatewayConfig: Equatable {
     /// Ordered fallback gateways tried after the preferred one.
     var fallbackGateways: [String] = []
 
-    static let defaultGateway = "https://dweb.link"
+    /// `inbrowser.link` is the service-worker gateway: the page installs a worker and the
+    /// browser fetches the blocks itself, from several providers at once. The path form
+    /// `inbrowser.link/ipfs/CID/path` redirects to `CID.ipfs.inbrowser.link/path`.
+    /// Default since 2026-09-25; `dweb.link`, the previous default, stopped serving over
+    /// HTTP on 2026-09-21 and now bounces the browser here anyway.
+    static let defaultGateway = "https://inbrowser.link"
     static let defaultFallbacks = [
         "https://ipfs.io",
         "https://4everland.io",

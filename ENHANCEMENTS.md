@@ -48,7 +48,7 @@ Tracking work intentionally deferred beyond the 1.0 MVP. Not bugs — planned im
 ## Functionality
 - [x] **Automatic gateway fallback.** Done — `GatewayResolver.resolve()` probes gateway
       health (HEAD to the root, 2.5 s timeout) and opens the first reachable of
-      dweb.link → ipfs.io → 4everland.io → ipfs.filebase.io. Off by default (zero-network
+      inbrowser.link → ipfs.io → 4everland.io → ipfs.filebase.io. Off by default (zero-network
       default preserved); `com.apple.security.network.client` entitlement added; Settings
       toggle live. Switches only on connection/DNS/timeout/5xx — never on a content 404.
 - [ ] **Remote/auto-updated gateway list** (opt-in, off by default) — `allowRemoteGatewayList`

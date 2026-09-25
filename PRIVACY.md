@@ -15,7 +15,7 @@ IPFS Opener is built to do one thing and get out of the way.
 
 ## What you should know
 - **Your gateway can see your requests.** Whichever IPFS gateway you use (the default is
-  `https://dweb.link`) can observe the CID you request and your network address, because
+  `https://inbrowser.link`) can observe the CID you request and your network address, because
   your browser connects to it directly. The active gateway is always shown in Settings so
   you know which service is retrieving your content. You can change it at any time.
 - **Clipboard.** On launch, the app reads the clipboard once to see whether it already

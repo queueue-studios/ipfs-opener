@@ -14,7 +14,7 @@ struct SettingsView: View {
             Section("Preferred gateway") {
                 // The field commits live (on Return or when focus leaves), so it
                 // always shows the gateway currently in use — no separate readout.
-                TextField("Gateway", text: $gatewayDraft, prompt: Text("https://dweb.link"))
+                TextField("Gateway", text: $gatewayDraft, prompt: Text("https://inbrowser.link"))
                     .textFieldStyle(.roundedBorder)
                     .focused($gatewayFocused)
                     .onSubmit(commitGateway)
@@ -24,7 +24,7 @@ struct SettingsView: View {
                     .accessibilityLabel("Preferred gateway address")
 
                 if gatewayError {
-                    Label("That isn’t a valid gateway. Use an https address like https://dweb.link.",
+                    Label("That isn’t a valid gateway. Use an https address like https://inbrowser.link.",
                           systemImage: "exclamationmark.triangle")
                         .font(.caption)
                         .foregroundStyle(.red)
