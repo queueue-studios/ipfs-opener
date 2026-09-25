@@ -63,7 +63,7 @@ raw input → InputClassifier → CIDParser → ParsedInput → GatewayResolver.
 ```
 `GatewayResolver.resolve()` is the single, `async` choke point. By default it performs no
 network activity. With the optional **fallback gateways** setting enabled, it probes gateway
-reachability and opens the first of `inbrowser.link → ipfs.io → 4everland.io → ipfs.filebase.io`
+reachability and opens the first of `inbrowser.link → ipfs.raribleuserdata.com → 4everland.io → ipfs.filebase.io`
 that's up, switching only on infrastructure failure (never on a content 404).
 
 ## License

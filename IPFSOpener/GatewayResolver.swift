@@ -21,8 +21,9 @@ struct GatewayConfig: Equatable {
     /// Default since 2026-09-25; `dweb.link`, the previous default, stopped serving over
     /// HTTP on 2026-09-21 and now bounces the browser here anyway.
     static let defaultGateway = "https://inbrowser.link"
+    /// `ipfs.io` was here until 2026-09-25; it retired with `dweb.link` and answers 429.
     static let defaultFallbacks = [
-        "https://ipfs.io",
+        "https://ipfs.raribleuserdata.com",
         "https://4everland.io",
         "https://ipfs.filebase.io",
     ]
