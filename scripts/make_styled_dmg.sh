@@ -60,20 +60,34 @@ MOUNT="/Volumes/$VOLNAME"
 hdiutil attach "$RW_DMG" -noautoopen -nobrowse >/dev/null
 
 echo "==> Styling window via Finder"
-osascript <<EOF || echo "   (Finder styling reported an issue; DMG still built)"
+# Finder occasionally ignores `set bounds` on a freshly opened window (seen on
+# macOS 27) and then persists whatever size it opened at. So: apply the bounds,
+# give Finder a beat, apply again, and read them back — erroring out (not just
+# warning) if they still don't match. Any AppleScript failure aborts the build.
+WANT_BOUNDS="{$WIN_L, $WIN_T, $WIN_R, $WIN_B}"
+osascript <<EOF
 tell application "Finder"
   tell disk "$VOLNAME"
     open
-    set current view of container window to icon view
-    set toolbar visible of container window to false
-    set statusbar visible of container window to false
-    set the bounds of container window to {$WIN_L, $WIN_T, $WIN_R, $WIN_B}
-    set opts to the icon view options of container window
+    set theWin to container window
+    set current view of theWin to icon view
+    set toolbar visible of theWin to false
+    set statusbar visible of theWin to false
+    set pathbar visible of theWin to false
+    set the bounds of theWin to $WANT_BOUNDS
+    set opts to the icon view options of theWin
     set arrangement of opts to not arranged
     set icon size of opts to $ICON_SIZE
     set background picture of opts to file ".background:background.png"
-    set position of item "$APP_IN_DMG" of container window to {$APP_X, $APP_Y}
-    set position of item "$APPS_NAME" of container window to {$APPS_X, $APPS_Y}
+    set position of item "$APP_IN_DMG" of theWin to {$APP_X, $APP_Y}
+    set position of item "$APPS_NAME" of theWin to {$APPS_X, $APPS_Y}
+    delay 1
+    set the bounds of theWin to $WANT_BOUNDS
+    delay 1
+    set got to the bounds of theWin
+    if got is not equal to $WANT_BOUNDS then
+      error "Finder window bounds are " & (got as text) & ", wanted $WANT_BOUNDS"
+    end if
     update without registering applications
     delay 1
     close
@@ -96,6 +110,16 @@ fi
 if [ ! -f "$MOUNT/.DS_Store" ]; then
   echo "!! No .DS_Store was written — Finder window styling failed." >&2
   echo "!! Run this from a foreground Terminal with GUI access (not a background/headless process)." >&2
+  hdiutil detach "$MOUNT" >/dev/null 2>&1 || true
+  exit 1
+fi
+
+# Guard 2: a .DS_Store existing isn't enough — check it actually records the
+# intended window size, hidden bars, icon size, background and icon positions.
+echo "==> Verifying recorded layout"
+sync
+if ! python3 "$ROOT/scripts/verify_dmg_layout.py" "$MOUNT/.DS_Store" \
+     "$WIN_W" "$((WIN_H + TITLEBAR))" "$ICON_SIZE" "$APP_X" "$APP_Y" "$APPS_X" "$APPS_Y"; then
   hdiutil detach "$MOUNT" >/dev/null 2>&1 || true
   exit 1
 fi
