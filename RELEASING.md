@@ -10,6 +10,12 @@ Everything ships under **Queueue Studios LLC** — Apple team `J87JRCN9RM`, GitH
 ## One-time setup
 
 - A **Developer ID Application** certificate for Queueue Studios LLC in your login keychain.
+  It is the same certificate OpenObject signs with and it **renews yearly** (current one expires
+  2027-11-13). Renew from developer.apple.com with **G2 Sub-CA** selected, using a certificate request
+  from Keychain Access; Xcode's Manage Certificates issued from the retired authority as late as Xcode 27.
+  After importing the new one, **delete the previous identity from the keychain**: the script selects
+  the certificate by display name, and two matches make `codesign` fail as ambiguous. Shipped DMGs are
+  timestamped and notarized, so they keep working through any renewal.
 - Stored `notarytool` credentials (an app-specific password from
   [appleid.apple.com](https://appleid.apple.com) → Sign-In and Security → App-Specific Passwords):
 
